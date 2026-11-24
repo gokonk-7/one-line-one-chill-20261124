@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """One Line, One Chill — make.fun entry.
 
-Prints the single submitted line of horror: one sentence, under
-200 characters, meant to frighten a reader in one breath.
+Writes the single submitted line of horror to /output/entry.txt:
+one sentence, under 200 characters, meant to frighten a reader in
+one breath. Also prints it to stdout for local checks.
 
 The line lives in line.txt (single source of truth); this script
-validates it against the competition's form rules and prints it.
+validates it against the competition's form rules and writes it.
 """
 
+import os
 import re
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "/output"))
 
 
 def load_line() -> str:
@@ -34,6 +37,8 @@ def validate(line: str) -> None:
 def main() -> None:
     line = load_line()
     validate(line)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUTPUT_DIR / "entry.txt").write_text(line + "\n", encoding="utf-8")
     print(line)
 
 
